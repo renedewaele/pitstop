@@ -5,6 +5,12 @@ import com.example.app.pitstop.api.IncidentDetails;
 import com.example.app.pitstop.api.IncidentId;
 import com.example.app.pitstop.api.OfferDetails;
 import com.example.app.pitstop.api.OfferId;
+import com.example.app.pitstop.api.command.AcceptOffer;
+import com.example.app.pitstop.api.command.CloseIncident;
+import com.example.app.pitstop.api.command.OfferAssistance;
+import com.example.app.pitstop.api.command.ReportIncident;
+import com.example.app.pitstop.api.query.GetIncidents;
+import io.fluxcapacitor.javaclient.FluxCapacitor;
 import io.fluxcapacitor.javaclient.web.HandleGet;
 import io.fluxcapacitor.javaclient.web.HandlePost;
 import io.fluxcapacitor.javaclient.web.Path;
@@ -19,27 +25,31 @@ public class PitStopApi {
 
     @HandlePost("incidents")
     IncidentId reportIncident(IncidentDetails details) {
-        throw new UnsupportedOperationException();
+        var incidentId = IncidentId.newValue();
+        FluxCapacitor.sendCommandAndWait(new ReportIncident(incidentId, details));
+        return incidentId;
     }
 
     @HandleGet("incidents")
     List<Incident> getIncidents() {
-        return List.of();
+        return FluxCapacitor.queryAndWait(new GetIncidents());
     }
 
     @HandlePost("incidents/{incidentId}/offers")
     OfferId offerAssistance(@PathParam IncidentId incidentId, OfferDetails details) {
-        throw new UnsupportedOperationException();
+        var command = new OfferAssistance(incidentId, details);
+        FluxCapacitor.sendCommandAndWait(command);
+        return command.getOfferId();
     }
 
     @HandlePost("incidents/{incidentId}/offers/{offerId}/accept")
     void acceptOffer(@PathParam IncidentId incidentId, @PathParam OfferId offerId) {
-        throw new UnsupportedOperationException();
+        FluxCapacitor.sendCommandAndWait(new AcceptOffer(incidentId, offerId));
     }
 
     @HandlePost("incidents/{incidentId}/close")
     void closeIncident(@PathParam IncidentId incidentId) {
-        throw new UnsupportedOperationException();
+        FluxCapacitor.sendCommandAndWait(new CloseIncident(incidentId));
     }
 
 }

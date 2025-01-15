@@ -1,0 +1,13 @@
+{
+  "@class": "com.example.app.pitstop.api.command.ReportIncident",
+  "incidentId": "case123",
+  "details": {
+    "vehicle": {
+      "licensePlateNumber": "Z-613-AB"
+    },
+    "location": {
+      "latitude" : 51.9472135264376,
+      "longitude": 4.473718320869365
+    }
+  }
+}
