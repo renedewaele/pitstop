@@ -12,7 +12,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
-@Aggregate(searchable = true, timestampPath = "start", endPath = "end")
+@Aggregate(searchable = true)
 @Builder(toBuilder = true)
 @Value
 public class Incident {

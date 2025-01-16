@@ -9,12 +9,13 @@ import com.example.app.user.authentication.Sender;
 import io.fluxcapacitor.javaclient.common.Message;
 import io.fluxcapacitor.javaclient.persisting.eventsourcing.Apply;
 import io.fluxcapacitor.javaclient.tracking.handling.IllegalCommandException;
+import io.fluxcapacitor.javaclient.tracking.handling.authentication.RequiresUser;
 import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.Value;
 
-@RequiresRole(Role.user)
+@RequiresUser
 @Value
 public class ReportIncident implements IncidentUpdate {
     IncidentId incidentId;

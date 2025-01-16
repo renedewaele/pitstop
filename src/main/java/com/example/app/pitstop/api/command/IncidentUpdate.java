@@ -21,7 +21,8 @@ public interface IncidentUpdate {
 
     @HandleCommand
     default void handle() {
-        FluxCapacitor.loadAggregate(getIncidentId()).assertAndApply(this);
+        FluxCapacitor.loadAggregate(getIncidentId())
+                .assertAndApply(this);
     }
 
     @AssertLegal
