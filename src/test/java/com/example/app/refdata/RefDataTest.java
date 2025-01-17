@@ -46,6 +46,6 @@ public class RefDataTest {
 
     String createAuthorizationHeader(String user) {
         return testFixture.getFluxCapacitor().apply(
-                fc -> AuthenticationUtils.createAuthorizationHeader(new UserId("user")));
+                fc -> AuthenticationUtils.createAuthorizationHeader(new UserId(user)));
     }
 }

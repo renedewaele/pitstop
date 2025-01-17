@@ -1,0 +1,151 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "AAA API",
+    "description" : "Good luck",
+    "contact" : {
+      "name" : "AAA dev team",
+      "url" : "https://api.f681e3263e1d4d0fb6669e61efcfedd1.flux.host",
+      "email" : "info@flux.host"
+    },
+    "version" : "v1"
+  },
+  "servers" : [ {
+    "url" : "https://api.f681e3263e1d4d0fb6669e61efcfedd1.flux.host",
+    "description" : "Test server"
+  } ],
+  "paths" : {
+    "/aaa/orders" : {
+      "post" : {
+        "tags" : [ "Endpoints" ],
+        "summary" : "Post order",
+        "operationId" : "createWorkOrder",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/WorkOrderDetails"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "String response.",
+            "content" : {
+              "text/plain" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/aaa/orders/{id}" : {
+      "get" : {
+        "tags" : [ "Endpoints" ],
+        "summary" : "Get order",
+        "operationId" : "getOrder",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "WorkOrder response.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/WorkOrder"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "WorkOrderDetails" : {
+        "required" : [ "lat", "licensePlate", "lon" ],
+        "type" : "object",
+        "properties" : {
+          "lat" : {
+            "type" : "number"
+          },
+          "lon" : {
+            "type" : "number"
+          },
+          "destinationName" : {
+            "type" : "string",
+            "nullable" : true
+          },
+          "licensePlate" : {
+            "type" : "string"
+          },
+          "driverName" : {
+            "type" : "string",
+            "nullable" : true
+          }
+        }
+      },
+      "WorkOrder" : {
+        "type" : "object",
+        "properties" : {
+          "orderId" : {
+            "type" : "string",
+            "nullable" : true
+          },
+          "details" : {
+            "nullable" : true,
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/WorkOrderDetails"
+            } ]
+          },
+          "timestamp" : {
+            "type" : "string",
+            "format" : "date-time",
+            "nullable" : true
+          },
+          "plannedArrival" : {
+            "type" : "string",
+            "format" : "date-time",
+            "nullable" : true
+          },
+          "workStatus" : {
+            "type" : "string",
+            "nullable" : true,
+            "enum" : [ "accepted", "planned", "enRoute", "arrived", "completed" ]
+          }
+        }
+      }
+    },
+    "responses" : {
+      "error" : {
+        "description" : "Request contains invalid data that cannot be processed.",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "type" : "object",
+              "properties" : {
+                "error" : {
+                  "type" : "string",
+                  "description" : "Message about what is causing the error.'"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "x-explicit-headers" : true,
+  "x-code-samples-enabled" : true
+}

@@ -34,7 +34,8 @@ public class AuthenticationUtils {
     private static final JWTVerifier jwtVerifier = new KeyBasedJwtVerifier();
 
     public static Sender getSender(HasMetadata request) {
-        return decode(request)
+        Optional<DecodedJWT> decodedJWT = decode(request);
+        return decodedJWT
                 .filter(jwt -> Objects.equals(getProperty("jwk.domain"), jwt.getIssuer()))
                 .map(jwt -> {
                     try {
@@ -45,7 +46,8 @@ public class AuthenticationUtils {
                         log.warn("Failed to verify sender from token: {}", jwt, e);
                         throw new UnauthorizedException("Token could not be verified");
                     }
-                }).map(AuthenticationUtils::toSender).orElse(null);
+                })
+                .or(() -> decodedJWT).map(AuthenticationUtils::toSender).orElse(null);
     }
 
     private static Optional<DecodedJWT> decode(HasMetadata request) {
