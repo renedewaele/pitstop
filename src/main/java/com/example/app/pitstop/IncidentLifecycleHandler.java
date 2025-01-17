@@ -1,6 +1,7 @@
 package com.example.app.pitstop;
 
 import com.example.app.pitstop.api.command.CloseIncident;
+import com.example.app.pitstop.api.command.EscalateIncident;
 import com.example.app.pitstop.api.command.ReportIncident;
 import io.fluxcapacitor.javaclient.FluxCapacitor;
 import io.fluxcapacitor.javaclient.tracking.handling.HandleEvent;
@@ -10,10 +11,13 @@ import java.time.Duration;
 
 @Component
 public class IncidentLifecycleHandler {
+    public static final Duration ESCALATE_DEADLINE = Duration.ofHours(1);
     public static final Duration INCIDENT_DEADLINE = Duration.ofHours(24);
 
     @HandleEvent
     void handle(ReportIncident update) {
+        FluxCapacitor.scheduleCommand(
+                new EscalateIncident(update.getIncidentId()), "escalate-%s".formatted(update.getIncidentId()), ESCALATE_DEADLINE);
         FluxCapacitor.scheduleCommand(
                 new CloseIncident(update.getIncidentId()), "deadline-%s".formatted(update.getIncidentId()), INCIDENT_DEADLINE);
     }

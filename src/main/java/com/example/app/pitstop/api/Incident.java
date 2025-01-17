@@ -33,6 +33,8 @@ public class Incident {
     @Facet
     Assistance assistance;
 
+    boolean escalated;
+
     public Optional<Offer> getAcceptedOffer() {
         return offers.stream().filter(Offer::isAccepted).findFirst();
     }
