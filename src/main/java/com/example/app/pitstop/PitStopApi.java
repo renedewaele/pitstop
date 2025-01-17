@@ -25,9 +25,7 @@ public class PitStopApi {
 
     @HandlePost("incidents")
     IncidentId reportIncident(IncidentDetails details) {
-        var incidentId = IncidentId.newValue();
-        FluxCapacitor.sendCommandAndWait(new ReportIncident(incidentId, details));
-        return incidentId;
+        return FluxCapacitor.sendCommandAndWait(new ReportIncident(details));
     }
 
     @HandleGet("incidents")
@@ -37,9 +35,7 @@ public class PitStopApi {
 
     @HandlePost("incidents/{incidentId}/offers")
     OfferId offerAssistance(@PathParam IncidentId incidentId, OfferDetails details) {
-        var command = new OfferAssistance(incidentId, details);
-        FluxCapacitor.sendCommandAndWait(command);
-        return command.getOfferId();
+        return FluxCapacitor.sendCommandAndWait(new OfferAssistance(incidentId, details));
     }
 
     @HandlePost("incidents/{incidentId}/offers/{offerId}/accept")

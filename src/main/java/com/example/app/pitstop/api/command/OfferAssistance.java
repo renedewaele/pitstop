@@ -8,6 +8,7 @@ import com.example.app.pitstop.api.OfferId;
 import io.fluxcapacitor.javaclient.modeling.AssertLegal;
 import io.fluxcapacitor.javaclient.persisting.eventsourcing.Apply;
 import io.fluxcapacitor.javaclient.tracking.handling.IllegalCommandException;
+import io.fluxcapacitor.javaclient.tracking.handling.Request;
 import io.fluxcapacitor.javaclient.tracking.handling.authentication.RequiresUser;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -15,12 +16,18 @@ import lombok.Value;
 
 @Value
 @RequiresUser
-public class OfferAssistance implements IncidentUpdate {
+public class OfferAssistance implements IncidentUpdate, Request<OfferId> {
     IncidentId incidentId;
     @NotNull OfferId offerId = OfferId.newValue();
 
     @AssertLegal @Valid @NotNull
     OfferDetails details;
+
+    @Override
+    public OfferId handle() {
+        IncidentUpdate.super.handle();
+        return offerId;
+    }
 
     @AssertLegal
     void assertNoAcceptedOffers(Incident incident) {

@@ -20,9 +20,10 @@ public interface IncidentUpdate {
     IncidentId getIncidentId();
 
     @HandleCommand
-    default void handle() {
+    default Object handle() {
         FluxCapacitor.loadAggregate(getIncidentId())
                 .assertAndApply(this);
+        return null;
     }
 
     @AssertLegal
