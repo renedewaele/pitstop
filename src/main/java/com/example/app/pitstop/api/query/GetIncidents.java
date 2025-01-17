@@ -19,7 +19,7 @@ public class GetIncidents implements Request<List<Incident>> {
     List<Incident> handle(Sender sender) {
         Search search = FluxCapacitor.search(Incident.class);
         if (!sender.isAdmin() && sender.getOperator() == null) {
-            search.match(sender.getUserId(), "reporter");
+            search.matchFacet("reporter", sender.getUserId());
         }
         return search.fetchAll();
     }

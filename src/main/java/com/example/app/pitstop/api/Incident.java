@@ -1,6 +1,7 @@
 package com.example.app.pitstop.api;
 
 import com.example.app.user.api.UserId;
+import io.fluxcapacitor.common.search.Facet;
 import io.fluxcapacitor.javaclient.modeling.Aggregate;
 import io.fluxcapacitor.javaclient.modeling.EntityId;
 import io.fluxcapacitor.javaclient.modeling.Member;
@@ -12,7 +13,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
-@Aggregate(searchable = true)
+@Aggregate(searchable = true, collection = "incidents", timestampPath = "start", endPath = "end")
 @Builder(toBuilder = true)
 @Value
 public class Incident {
@@ -20,6 +21,7 @@ public class Incident {
     IncidentId incidentId;
     IncidentDetails details;
 
+    @Facet
     UserId reporter;
 
     Instant start, end;
@@ -28,6 +30,7 @@ public class Incident {
     @Singular
     List<Offer> offers;
 
+    @Facet
     Assistance assistance;
 
     public Optional<Offer> getAcceptedOffer() {

@@ -18,6 +18,7 @@ import io.fluxcapacitor.javaclient.web.PathParam;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Component
 @Path("/api")
@@ -39,8 +40,8 @@ public class PitStopApi {
     }
 
     @HandlePost("incidents/{incidentId}/offers/{offerId}/accept")
-    void acceptOffer(@PathParam IncidentId incidentId, @PathParam OfferId offerId) {
-        FluxCapacitor.sendCommandAndWait(new AcceptOffer(incidentId, offerId));
+    CompletableFuture<Void> acceptOffer(@PathParam IncidentId incidentId, @PathParam OfferId offerId) {
+        return FluxCapacitor.sendCommand(new AcceptOffer(incidentId, offerId));
     }
 
     @HandlePost("incidents/{incidentId}/close")

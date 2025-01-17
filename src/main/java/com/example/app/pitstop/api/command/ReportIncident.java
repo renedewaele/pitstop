@@ -32,7 +32,7 @@ public class ReportIncident implements IncidentUpdate, Request<IncidentId> {
     @Override
     public void assertExistence(@Nullable Incident incident) {
         if (incident != null) {
-            throw new IllegalCommandException("Assistance already exists");
+            throw new IllegalCommandException("Incident already exists");
         }
     }
 
