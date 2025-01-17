@@ -19,9 +19,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import static com.example.app.pitstop.IncidentLifecycleHandler.INCIDENT_DEADLINE;
+
 class PitStopTest {
 
-    final TestFixture testFixture = TestFixture.create(PitStopApi.class);
+    final TestFixture testFixture = TestFixture.create(PitStopApi.class, IncidentLifecycleHandler.class);
 
     @Nested
     class IncidentTests {
@@ -55,6 +57,30 @@ class PitStopTest {
         void reportViaApi() {
             testFixture.whenPost("/api/incidents", "/pitstop/incident-details.json")
                     .expectEvents(ReportIncident.class).expectResult(IncidentId.class);
+        }
+
+        @Nested
+        class LifecycleTests {
+            @BeforeEach
+            void setUp() {
+                testFixture
+                        .givenCommands("/user/create-user.json")
+                        .givenCommandsByUser("user", "/pitstop/report-incident.json");
+            }
+
+            @Test
+            void closeAutomaticallyOnDeadline() {
+                testFixture.whenTimeElapses(INCIDENT_DEADLINE)
+                        .expectEvents(CloseIncident.class);
+            }
+
+            @Test
+            void dontCloseIncidentTwice() {
+                testFixture
+                        .givenCommands("/pitstop/close-incident.json")
+                        .whenTimeElapses(INCIDENT_DEADLINE)
+                        .expectNoCommands();
+            }
         }
 
         @Nested
