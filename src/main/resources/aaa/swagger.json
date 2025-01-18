@@ -14,6 +14,9 @@
     "url" : "https://api.f681e3263e1d4d0fb6669e61efcfedd1.flux.host",
     "description" : "Test server"
   } ],
+  "security" : [ {
+    "bearerAuth" : [ ]
+  } ],
   "paths" : {
     "/aaa/orders" : {
       "post" : {
@@ -65,6 +68,30 @@
                   "$ref" : "#/components/schemas/WorkOrder"
                 }
               }
+            }
+          },
+          "404" : {
+            "description" : "Unknown order."
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Endpoints" ],
+        "summary" : "Delete order",
+        "operationId" : "deleteOrder",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "No response.",
+            "content" : {
+              "application/json" : { }
             }
           }
         }
@@ -143,6 +170,12 @@
             }
           }
         }
+      }
+    },
+    "securitySchemes" : {
+      "bearerAuth" : {
+        "type" : "http",
+        "scheme" : "bearer"
       }
     }
   },
