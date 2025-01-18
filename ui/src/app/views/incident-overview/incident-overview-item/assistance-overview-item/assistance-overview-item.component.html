@@ -3,7 +3,7 @@
     <i class="bi bi-person-badge"></i>
   </div>
   <div class="col-6 small">
-    {{assistance.assistantName || ''}} {{assistance.ata ? 'Arrived' : 'En route'}}
+    {{assistance.assistantName || ''}} {{assistance.ata ? assistance.resolved ? 'Resolved' : 'Arrived' : 'En route'}}
   </div>
   <div class="col small">
     <ng-container *ngIf="!assistance.ata && assistance.eta as eta">
