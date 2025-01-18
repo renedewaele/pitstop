@@ -34,6 +34,13 @@ public class AcceptOffer implements IncidentUpdate, AssertReporter {
         }
     }
 
+    @AssertLegal
+    void assertNotEscalated(Incident incident) {
+        if (incident.isEscalated()) {
+            throw new IllegalCommandException("Incident has already been escalated to our default operator.");
+        }
+    }
+
     @Apply
     Offer apply(Offer offer) {
         return offer.toBuilder().accepted(true).build();

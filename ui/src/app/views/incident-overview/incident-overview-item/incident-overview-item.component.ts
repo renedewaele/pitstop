@@ -1,13 +1,13 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy} from '@angular/core';
 import {View} from '../../../common/view';
 import {HandleQuery} from '../../../common/handle-query';
-import {Observable, of} from 'rxjs';
+import {filter, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {Handler} from '../../../common/handler';
-import {Incident, Offer} from '@pitstop/typescriptmodels/pitstop';
+import {AppSettings, Incident, Offer} from '@pitstop/typescriptmodels/pitstop';
 import {OfferModalComponent} from '../offer-modal/offer-modal.component';
 import {AppContext} from '../../../app-context';
-import {AppCommonUtils} from '../../../common/app-common-utils';
+import moment from 'moment/moment';
 
 @Component({
   selector: 'app-incident-overview-item',
@@ -15,10 +15,31 @@ import {AppCommonUtils} from '../../../common/app-common-utils';
   styleUrls: ['./incident-overview-item.component.scss']
 })
 @Handler()
-export class IncidentOverviewItemComponent extends View implements OnInit {
+export class IncidentOverviewItemComponent extends View implements OnDestroy {
   @Input() incident: Incident;
 
-  ngOnInit(): void {
+  escalationPercentage: number;
+  private escalationInterval;
+  settings = this.sendQuery("/api/settings")
+    .pipe(filter((s : AppSettings) => s && !!s.escalationDelay))
+    .subscribe(s =>
+      setInterval(this.escalationInterval = () => this.updateEscalationTimer(s), 100));
+
+  updateEscalationTimer = (settings: AppSettings) => {
+    const max = moment.duration(settings.escalationDelay).asMilliseconds();
+    if (max) {
+      const start = moment(this.incident.start);
+      const now = moment();
+      const duration = moment.duration(now.diff(start));
+      const current = Math.max(0, duration.asMilliseconds());
+      this.escalationPercentage = Math.min(current/max * 100, 100);
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.escalationInterval) {
+      clearInterval(this.escalationInterval);
+    }
   }
 
   @HandleQuery("getIncident")
@@ -31,6 +52,10 @@ export class IncidentOverviewItemComponent extends View implements OnInit {
     this.openModal(OfferModalComponent, c => c.incidentId = this.incident.incidentId);
   }
 
+  escalateIncident() {
+    this.sendCommand(`/api/incidents/${this.incident.incidentId}/escalate`, {});
+  }
+
   closeIncident() {
     this.sendCommand(`/api/incidents/${this.incident.incidentId}/close`, {});
   }
@@ -38,5 +63,4 @@ export class IncidentOverviewItemComponent extends View implements OnInit {
   trackByOfferId = (index: number, record: Offer) => record.offerId;
 
   protected readonly AppContext = AppContext;
-  protected readonly appUtils = AppCommonUtils;
 }

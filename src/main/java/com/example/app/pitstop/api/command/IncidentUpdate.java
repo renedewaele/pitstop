@@ -9,11 +9,13 @@ import io.fluxcapacitor.javaclient.tracking.Consumer;
 import io.fluxcapacitor.javaclient.tracking.TrackSelf;
 import io.fluxcapacitor.javaclient.tracking.handling.HandleCommand;
 import io.fluxcapacitor.javaclient.tracking.handling.IllegalCommandException;
+import io.fluxcapacitor.javaclient.tracking.handling.authentication.RequiresUser;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 
 @TrackSelf
 @Consumer(name = "incident-core")
+@RequiresUser
 public interface IncidentUpdate {
     @RoutingKey
     @NotNull

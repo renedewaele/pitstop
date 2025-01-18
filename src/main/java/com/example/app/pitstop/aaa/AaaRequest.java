@@ -24,6 +24,6 @@ public class AaaRequest extends SendWebRequest implements Request<String> {
                 .url(ApplicationProperties.requireProperty("aaa.domain") + resourcePath)
                 .method(method)
                 .payload(body)
-                .header("Authorization", "Token " + ApplicationProperties.requireProperty("aaa-token"));
+                .header("Authorization", "Token " + ApplicationProperties.requireProperty("aaa.token"));
     }
 }

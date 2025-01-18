@@ -44,6 +44,13 @@ public class OfferAssistance implements IncidentUpdate, Request<OfferId> {
         }
     }
 
+    @AssertLegal
+    void assertNotEscalated(Incident incident) {
+        if (incident.isEscalated()) {
+            throw new IllegalCommandException("Incident has already been escalated to the default operator.");
+        }
+    }
+
     @Apply
     Offer apply() {
         return Offer.builder().offerId(offerId).details(details).build();

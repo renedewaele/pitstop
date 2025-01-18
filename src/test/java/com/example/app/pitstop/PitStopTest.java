@@ -3,16 +3,17 @@ package com.example.app.pitstop;
 import com.example.app.pitstop.api.IncidentId;
 import com.example.app.pitstop.api.command.AcceptOffer;
 import com.example.app.pitstop.api.command.CloseIncident;
+import com.example.app.pitstop.api.command.EscalateIncident;
 import com.example.app.pitstop.api.command.OfferAssistance;
 import com.example.app.pitstop.api.command.ReportIncident;
 import com.example.app.pitstop.api.query.GetIncidents;
 import com.example.app.user.api.UserId;
 import com.example.app.user.authentication.AuthenticationUtils;
 import io.fluxcapacitor.javaclient.test.TestFixture;
-import io.fluxcapacitor.javaclient.web.HttpRequestMethod;
-import io.fluxcapacitor.javaclient.web.WebRequest;
 import io.fluxcapacitor.javaclient.tracking.handling.IllegalCommandException;
 import io.fluxcapacitor.javaclient.tracking.handling.authentication.UnauthorizedException;
+import io.fluxcapacitor.javaclient.web.HttpRequestMethod;
+import io.fluxcapacitor.javaclient.web.WebRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.example.app.pitstop.IncidentLifecycleHandler.INCIDENT_DEADLINE;
+import static com.example.app.pitstop.IncidentLifecycleHandler.AUTO_CLOSE_DEADLINE;
+import static com.example.app.pitstop.IncidentLifecycleHandler.ESCALATE_DEADLINE;
 
 class PitStopTest {
 
@@ -61,6 +63,21 @@ class PitStopTest {
                     .expectEvents(ReportIncident.class).expectResult(IncidentId.class);
         }
 
+        @Test
+        void manuallyEscalateIncident() {
+            testFixture.givenCommands("/pitstop/report-incident.json")
+                    .whenCommand("/pitstop/escalate-incident.json")
+                    .expectEvents("/pitstop/escalate-incident.json");
+        }
+
+        @Test
+        void escalateAfterAcceptFails() {
+            testFixture.givenCommands("/pitstop/report-incident.json", "/pitstop/offer-assistance-allstate.json",
+                                      "/pitstop/accept-offer-allstate.json")
+                    .whenCommand("/pitstop/escalate-incident.json")
+                    .expectExceptionalResult(IllegalCommandException.class);
+        }
+
         @Nested
         class LifecycleTests {
             @BeforeEach
@@ -72,15 +89,29 @@ class PitStopTest {
 
             @Test
             void closeAutomaticallyOnDeadline() {
-                testFixture.whenTimeElapses(INCIDENT_DEADLINE)
+                testFixture.whenTimeElapses(AUTO_CLOSE_DEADLINE)
                         .expectEvents(CloseIncident.class);
+            }
+
+            @Test
+            void escalateAutomaticallyOnDeadline() {
+                testFixture.whenTimeElapses(ESCALATE_DEADLINE)
+                        .expectEvents(EscalateIncident.class);
+            }
+
+            @Test
+            void dontEscalateAfterAccept() {
+                testFixture
+                        .givenCommands("/pitstop/offer-assistance-allstate.json", "/pitstop/accept-offer-allstate.json")
+                        .whenTimeElapses(ESCALATE_DEADLINE)
+                        .expectNoEvents();
             }
 
             @Test
             void dontCloseIncidentTwice() {
                 testFixture
                         .givenCommands("/pitstop/close-incident.json")
-                        .whenTimeElapses(INCIDENT_DEADLINE)
+                        .whenTimeElapses(AUTO_CLOSE_DEADLINE)
                         .expectNoCommands();
             }
         }
@@ -99,14 +130,14 @@ class PitStopTest {
             void getIncidents() {
                 testFixture.whenQuery(new GetIncidents())
                         .expectResult(r -> r.size() == 1
-                                           && Objects.equals(r.getFirst().getIncidentId(), new IncidentId("case123")));
+                                           && Objects.equals(r.getFirst().getIncidentId(), new IncidentId("0")));
             }
 
             @Test
             void getIncidents_authorized() {
                 testFixture.whenQueryByUser("user", new GetIncidents())
                         .expectResult(r -> r.size() == 1
-                                           && Objects.equals(r.getFirst().getIncidentId(), new IncidentId("case123")));
+                                           && Objects.equals(r.getFirst().getIncidentId(), new IncidentId("0")));
             }
 
             @Test
@@ -185,7 +216,7 @@ class PitStopTest {
 
             @Test
             void offerViaApi() {
-                testFixture.whenPost("/api/incidents/%s/offers".formatted("case123"),
+                testFixture.whenPost("/api/incidents/%s/offers".formatted("0"),
                                      "/pitstop/offer-details.json")
                         .expectEvents(OfferAssistance.class);
             }
@@ -193,7 +224,7 @@ class PitStopTest {
             @Test
             void acceptViaApi() {
                 testFixture.givenCommands("/pitstop/offer-assistance-allstate.json")
-                        .whenPost("/api/incidents/%s/offers/%s/accept".formatted("case123", "offer123-allstate"),
+                        .whenPost("/api/incidents/%s/offers/%s/accept".formatted("0", "1"),
                                   Map.of()).expectEvents(AcceptOffer.class);
             }
 
@@ -225,7 +256,7 @@ class PitStopTest {
                 void closeViaApi_reporter() {
                     testFixture
                             .withHeader("Authorization", createAuthorizationHeader("user"))
-                            .whenPost("/api/incidents/%s/close".formatted("case123"),
+                            .whenPost("/api/incidents/%s/close".formatted("0"),
                                          Map.of()).expectEvents(CloseIncident.class);
                 }
             }
@@ -234,13 +265,13 @@ class PitStopTest {
 
     String createAuthorizationHeader(String user) {
         return testFixture.getFluxCapacitor().apply(
-                fc -> AuthenticationUtils.createAuthorizationHeader(new UserId("user")));
+                fc -> AuthenticationUtils.createAuthorizationHeader(new UserId(user)));
     }
 
     @Test
     void testCorsPreflight() {
         testFixture.whenWebRequest(WebRequest.builder().method(HttpRequestMethod.OPTIONS)
-                                           .url("/api/user").build())
+                                           .url("/api/user/2").build())
                 .expectSuccessfulResult();
     }
 }

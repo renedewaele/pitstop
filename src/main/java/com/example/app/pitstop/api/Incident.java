@@ -4,6 +4,7 @@ import com.example.app.user.api.UserId;
 import io.fluxcapacitor.common.search.Facet;
 import io.fluxcapacitor.javaclient.modeling.Aggregate;
 import io.fluxcapacitor.javaclient.modeling.EntityId;
+import io.fluxcapacitor.javaclient.modeling.EventPublication;
 import io.fluxcapacitor.javaclient.modeling.Member;
 import lombok.Builder;
 import lombok.Singular;
@@ -13,7 +14,8 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
-@Aggregate(searchable = true, collection = "incidents", timestampPath = "start", endPath = "end")
+@Aggregate(searchable = true, collection = "incidents", timestampPath = "start", endPath = "end",
+        eventPublication = EventPublication.IF_MODIFIED)
 @Builder(toBuilder = true)
 @Value
 public class Incident {

@@ -1,6 +1,6 @@
 {
   "@class": "com.example.app.pitstop.api.command.ReportIncident",
-  "incidentId": "case123",
+  "incidentId": "0",
   "details": {
     "vehicle": {
       "licensePlateNumber": "Z-613-AB"

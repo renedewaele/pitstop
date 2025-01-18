@@ -3,6 +3,33 @@
     <app-confirmation-toggle>
       <div class="modal-content">
         <div class="modal-header">
+          <h3 class="modal-title">Escalate incident</h3>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to escalate this incident to our default operator?</p>
+          <p>Typically they cost a little more...</p>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <a type="button" class="btn btn-secondary"
+             data-bs-dismiss="modal">Cancel</a>
+          <button type="button" class="btn btn-primary" (click)="escalateIncident()"
+                  data-bs-dismiss="modal">
+            Escalate incident
+          </button>
+        </div>
+      </div>
+
+      <button [title]="incident.escalated ? 'Incident escalated' : 'Escalate to default operator'" [disabled]="incident.escalated"
+        type="button" class="border-0 btn position-absolute top-0 start-0" [ngClass]="{'to-show' : !incident.escalated && escalationPercentage <= 70}" role="button">
+        <div class="progress-circle" [ngClass]="{'success': incident.escalated}"
+             [style]="'--progress: ' + escalationPercentage + '; width: 20px; height: 20px'"></div>
+      </button>
+    </app-confirmation-toggle>
+
+    <app-confirmation-toggle>
+      <div class="modal-content">
+        <div class="modal-header">
           <h3 class="modal-title">Close incident</h3>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
@@ -19,7 +46,8 @@
         </div>
       </div>
 
-      <button type="button" class="btn position-absolute top-0 end-0 to-show" role="button"
+      <button title="Close incident"
+        type="button" class="btn position-absolute top-0 end-0 to-show" role="button"
               aria-expanded="false">
         <i class="bi bi-trash"></i>
       </button>
@@ -39,7 +67,7 @@
 
     <hr class="card-divider m-0 mb-3">
 
-    <div *ngIf="incident.offers.length === 0"
+    <div *ngIf="!incident.escalated && incident.offers.length === 0"
          class="small text-muted d-flex align-items-center justify-content-center flex-column">
       No offers yet
     </div>
@@ -52,7 +80,7 @@
         <app-assistance-overview-item [assistance]="assistance"></app-assistance-overview-item>
       </div>
       <div class="list-group-item py-3 pointer hover-underline" (click)="addOffer()"
-           *ngIf="!incident.acceptedOffer && (AppContext.userProfile.operator || AppContext.isAdmin())">
+           *ngIf="!incident.escalated && !incident.acceptedOffer && (AppContext.userProfile.operator || AppContext.isAdmin())">
         <div class="row">
           <div class="col-auto">
             <i class="bi me-2 bi-plus-circle"></i>

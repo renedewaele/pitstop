@@ -1,0 +1,4 @@
+{
+  "@class": "com.example.app.pitstop.api.command.EscalateIncident",
+  "incidentId": "0"
+}
