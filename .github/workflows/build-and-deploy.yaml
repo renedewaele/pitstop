@@ -25,11 +25,11 @@ jobs:
       - name: Build with Maven
         run: mvn -B -T1C package
 
-      - name: Extract metadata (tags, labels) for aaa
+      - name: Extract metadata (tags, labels) for pitstop
         id: docker-meta
         uses: docker/metadata-action@v5
         with:
-          images: registry.flux.host/aaa
+          images: registry.flux.host/pitstop
 
       - name: Generate Flux Host JWT
         id: jwt
@@ -69,7 +69,8 @@ jobs:
       - name: Build
         run: |
           cd ui
-          npm run build
+          npm install
+          npm run build-prod
 
       - name: Publish to Cloudflare Pages
         uses: cloudflare/pages-action@v1
@@ -77,4 +78,4 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
           projectName: 'pitstop'
-          directory: 'dist/pitstop'
+          directory: 'ui/dist/pitstop'

@@ -7,6 +7,7 @@
     "build": "ng build",
     "build-schematics": "tsc -p ./schematics/angular-cqrs/tsconfig.json",
     "build-rebound": "ng build --configuration=rebound",
+    "build-prod": "ng build --configuration=production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },

@@ -2,7 +2,7 @@
   "openapi" : "3.0.1",
   "info" : {
     "title" : "AAA API",
-    "description" : "Good luck",
+    "description" : "For authentication use header `Authorization: Token <apitoken>`.",
     "contact" : {
       "name" : "AAA dev team",
       "url" : "https://api.f681e3263e1d4d0fb6669e61efcfedd1.flux.host",

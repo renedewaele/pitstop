@@ -10,7 +10,7 @@ async function run() {
         const applicationName = core.getInput('application-name', {required: true});
         const firstTag = JSON.parse(metadata).tags[0];
         const tagParts = firstTag.split(':');
-        const imageName = tagParts[0];
+        const imageName = tagParts[0].substring(tagParts[0].lastIndexOf('/') + 1);
         const version = tagParts[1];
 
         const httpClient = new HttpClient();

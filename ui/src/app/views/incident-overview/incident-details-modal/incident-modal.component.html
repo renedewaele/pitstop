@@ -21,7 +21,7 @@
             <textarea
               class="form-control m-2 position-absolute"
               [ngClass]="{'invisible': !data.location?.name}" required
-                      [ngModel]="data.location && (data.location.latitude + ', ' + data.location.latitude + '\n' + data.location.name)"
+                      [ngModel]="data.location && ((data.location.latitude | number:'1.1-6') + ', ' + (data.location.longitude | number:'1.1-6') + '\n' + data.location.name)"
                       style="width: 250px; z-index: 1000">
             </textarea>
             <app-map-box (geoLocate)="data.location = $event"></app-map-box>

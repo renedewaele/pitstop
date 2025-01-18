@@ -7,7 +7,9 @@ import io.fluxcapacitor.javaclient.common.HasMessage;
 import io.fluxcapacitor.javaclient.common.serialization.DeserializingMessage;
 import io.fluxcapacitor.javaclient.tracking.handling.authentication.AbstractUserProvider;
 import io.fluxcapacitor.javaclient.tracking.handling.authentication.User;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class SenderProvider extends AbstractUserProvider {
 
     public SenderProvider() {
@@ -16,10 +18,15 @@ public class SenderProvider extends AbstractUserProvider {
 
     @Override
     public User fromMessage(HasMessage message) {
-        if (message instanceof DeserializingMessage dm && dm.getMessageType() == MessageType.WEBREQUEST) {
-            return AuthenticationUtils.getSender(dm);
+        try {
+            if (message instanceof DeserializingMessage dm && dm.getMessageType() == MessageType.WEBREQUEST) {
+                return AuthenticationUtils.getSender(dm);
+            }
+            return super.fromMessage(message);
+        } catch (Throwable e) {
+            log.error("Failed to get sender", e);
+            throw e;
         }
-        return super.fromMessage(message);
     }
 
     @Override

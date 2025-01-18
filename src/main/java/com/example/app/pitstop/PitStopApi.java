@@ -12,11 +12,14 @@ import com.example.app.pitstop.api.command.ReportIncident;
 import com.example.app.pitstop.api.query.GetIncidents;
 import io.fluxcapacitor.javaclient.FluxCapacitor;
 import io.fluxcapacitor.javaclient.web.HandleGet;
+import io.fluxcapacitor.javaclient.web.HandleOptions;
 import io.fluxcapacitor.javaclient.web.HandlePost;
 import io.fluxcapacitor.javaclient.web.Path;
 import io.fluxcapacitor.javaclient.web.PathParam;
+import io.fluxcapacitor.javaclient.web.WebResponse;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -47,6 +50,15 @@ public class PitStopApi {
     @HandlePost("incidents/{incidentId}/close")
     void closeIncident(@PathParam IncidentId incidentId) {
         FluxCapacitor.sendCommandAndWait(new CloseIncident(incidentId));
+    }
+
+    @Path("/api/*")
+    @HandleOptions
+    WebResponse corsPreflight() {
+        return WebResponse.builder()
+                .header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, HEAD, TRACE")
+                .header("Access-Control-Max-Age", String.valueOf(Duration.ofDays(1).toSeconds()))
+                .build();
     }
 
 }

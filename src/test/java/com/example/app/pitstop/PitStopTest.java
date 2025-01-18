@@ -9,6 +9,8 @@ import com.example.app.pitstop.api.query.GetIncidents;
 import com.example.app.user.api.UserId;
 import com.example.app.user.authentication.AuthenticationUtils;
 import io.fluxcapacitor.javaclient.test.TestFixture;
+import io.fluxcapacitor.javaclient.web.HttpRequestMethod;
+import io.fluxcapacitor.javaclient.web.WebRequest;
 import io.fluxcapacitor.javaclient.tracking.handling.IllegalCommandException;
 import io.fluxcapacitor.javaclient.tracking.handling.authentication.UnauthorizedException;
 import org.junit.jupiter.api.BeforeEach;
@@ -235,5 +237,10 @@ class PitStopTest {
                 fc -> AuthenticationUtils.createAuthorizationHeader(new UserId("user")));
     }
 
-
+    @Test
+    void testCorsPreflight() {
+        testFixture.whenWebRequest(WebRequest.builder().method(HttpRequestMethod.OPTIONS)
+                                           .url("/api/user").build())
+                .expectSuccessfulResult();
+    }
 }

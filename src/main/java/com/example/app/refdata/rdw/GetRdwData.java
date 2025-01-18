@@ -15,8 +15,8 @@ public class GetRdwData extends SendWebRequest implements Request<String> {
     @Override
     protected WebRequest.Builder buildRequest(WebRequest.Builder requestBuilder, Sender sender) {
         return requestBuilder
-                .url("https://opendata.rdw.nl" + resourcePath)
+                .url(ApplicationProperties.requireProperty("rdw.domain") + resourcePath)
                 .method(HttpRequestMethod.GET)
-                .header("X-App-Token", ApplicationProperties.requireProperty("rdw-token"));
+                .header("X-App-Token", ApplicationProperties.requireProperty("rdw.token"));
     }
 }
