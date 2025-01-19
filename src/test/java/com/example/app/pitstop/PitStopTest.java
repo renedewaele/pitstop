@@ -7,8 +7,6 @@ import com.example.app.pitstop.api.command.EscalateIncident;
 import com.example.app.pitstop.api.command.OfferAssistance;
 import com.example.app.pitstop.api.command.ReportIncident;
 import com.example.app.pitstop.api.query.GetIncidents;
-import com.example.app.user.api.UserId;
-import com.example.app.user.authentication.AuthenticationUtils;
 import io.fluxcapacitor.javaclient.test.TestFixture;
 import io.fluxcapacitor.javaclient.tracking.handling.IllegalCommandException;
 import io.fluxcapacitor.javaclient.tracking.handling.authentication.UnauthorizedException;
@@ -24,6 +22,7 @@ import java.util.Objects;
 
 import static com.example.app.pitstop.IncidentLifecycleHandler.AUTO_CLOSE_DEADLINE;
 import static com.example.app.pitstop.IncidentLifecycleHandler.ESCALATE_DEADLINE;
+import static com.example.app.user.authentication.AuthenticationUtils.createAuthorizationHeader;
 
 class PitStopTest {
 
@@ -261,11 +260,6 @@ class PitStopTest {
                 }
             }
         }
-    }
-
-    String createAuthorizationHeader(String user) {
-        return testFixture.getFluxCapacitor().apply(
-                fc -> AuthenticationUtils.createAuthorizationHeader(new UserId(user)));
     }
 
     @Test

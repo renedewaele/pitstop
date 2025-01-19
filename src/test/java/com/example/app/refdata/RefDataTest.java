@@ -1,13 +1,13 @@
 package com.example.app.refdata;
 
 import com.example.app.refdata.api.OperatorId;
-import com.example.app.user.api.UserId;
 import com.example.app.user.api.command.AuthorizeForOperator;
-import com.example.app.user.authentication.AuthenticationUtils;
 import io.fluxcapacitor.javaclient.test.TestFixture;
 import io.fluxcapacitor.javaclient.tracking.handling.IllegalCommandException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+
+import static com.example.app.user.authentication.AuthenticationUtils.createAuthorizationHeader;
 
 public class RefDataTest {
 
@@ -44,8 +44,4 @@ public class RefDataTest {
         }
     }
 
-    String createAuthorizationHeader(String user) {
-        return testFixture.getFluxCapacitor().apply(
-                fc -> AuthenticationUtils.createAuthorizationHeader(new UserId(user)));
-    }
 }

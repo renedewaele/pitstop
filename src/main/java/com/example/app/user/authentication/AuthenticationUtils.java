@@ -76,6 +76,10 @@ public class AuthenticationUtils {
         return Sender.createSender(userProfile.get());
     }
 
+    public static String createAuthorizationHeader(String userId) {
+        return createAuthorizationHeader(new UserId(userId));
+    }
+
     public static String createAuthorizationHeader(UserId userId) {
         return "Bearer "  + createJwtToken(userId);
     }
