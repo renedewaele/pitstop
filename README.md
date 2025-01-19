@@ -29,7 +29,7 @@ To get started:
     - `ng serve`
 - Please check in with colleagues or us before the training if either doesn't run.
 - Add `application-local.properties` to `/src/main/resources`. You'll receive this file before the training.
-- Via Intellij's run config menu, run: `Flux test + proxy + app` 
+- Via Intellij's run config menu, run: `Flux test + proxy + app`
 
 ## Day 1
 
@@ -39,12 +39,12 @@ To get started please have a look at the `PitStopApi` class. It contains a bunch
 PitStop. The provided frontend makes use of these endpoints, so it is your challenge to provide an implementation.
 For that, you'll need to develop the following features:
 
-- Report incident
-- Get incidents
-- Offer assistance as operator
-- Accept an offer
-- Close incident
-- Schedule to close an incident automatically after 24h
+- [x] Report incident
+- [x] Get incidents
+- [x] Offer assistance as operator
+- [x] Accept an offer
+- [x] Close incident
+- [x] Schedule to close an incident automatically after 24h
 
 All features should be accompanied by automated behavioral tests. You'll also be able to check your implementation
 using the provided UI.
@@ -56,12 +56,20 @@ break the UI.
 
 Now that we have our minimum viable version of the App, let's add some more advanced features.
 
-First of, we want to make sure someone can always get roadside assistance, even when there are no suitable offers. For
+We want to make sure someone can always get roadside assistance, even when there are no suitable offers. For
 this, we will build an integration with a default roadside operator, called AAA. This operator provides endpoints to
-request assistance ánd receive status updates on the work.
+request assistance ánd receive status updates on the work. We want the application to be able to escalate the incident
+to the default operator. For that, implement the following tasks:
+
+- [x] Enable reporter to escalate the incident immediately
+- [x] Escalate incident automatically after 15 minutes without accepted offer
+- [x] Create work order for default operator (API specs [here](src/main/resources/aaa/swagger.json))
+- [x] Update incident based on updates from the default operator
+- [x] Cancel work order if incident is closed prematurely
 
 Other features for day 2:
-- Filter out offers by competing operators
-- Support categorization of incidents
-- Support voting on operators
-- Create reports on the performance of operators
+
+- [x] Filter out offers by competing operators
+- [ ] Support categorization of incidents
+- [ ] Support voting on operators
+- [ ] Create reports on the performance of operators
