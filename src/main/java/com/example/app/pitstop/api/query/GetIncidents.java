@@ -10,6 +10,7 @@ import io.fluxcapacitor.javaclient.tracking.handling.authentication.RequiresUser
 import lombok.Value;
 
 import java.util.List;
+import java.util.Objects;
 
 @Value
 @RequiresUser
@@ -21,6 +22,7 @@ public class GetIncidents implements Request<List<Incident>> {
         if (!sender.isAdmin() && sender.getOperator() == null) {
             search.matchFacet("reporter", sender.getUserId());
         }
-        return search.fetchAll();
+        return search.<Incident>stream().map(i -> FluxCapacitor.filterContent(i, sender))
+                .filter(Objects::nonNull).toList();
     }
 }

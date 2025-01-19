@@ -30,6 +30,11 @@ public class OfferAssistance implements IncidentUpdate, Request<OfferId> {
     }
 
     @AssertLegal
+    void assertNewOffer(Offer offer) {
+        throw new IllegalCommandException("Offer already exists");
+    }
+
+    @AssertLegal
     void assertNoAcceptedOffers(Incident incident) {
         if (incident.getAcceptedOffer().isPresent()) {
             throw new IllegalCommandException("Another offer has already been accepted.");

@@ -1,7 +1,7 @@
 {
   "@class": "com.example.app.pitstop.api.command.OfferAssistance",
   "incidentId": "0",
-  "offerId": "1",
+  "offerId": "2",
   "details": {
     "operatorId": "aaa",
     "price": 22.50

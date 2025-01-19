@@ -7,6 +7,7 @@ import com.example.app.pitstop.api.command.EscalateIncident;
 import com.example.app.pitstop.api.command.OfferAssistance;
 import com.example.app.pitstop.api.command.ReportIncident;
 import com.example.app.pitstop.api.query.GetIncidents;
+import com.example.app.refdata.api.OperatorId;
 import io.fluxcapacitor.javaclient.test.TestFixture;
 import io.fluxcapacitor.javaclient.tracking.handling.IllegalCommandException;
 import io.fluxcapacitor.javaclient.tracking.handling.authentication.UnauthorizedException;
@@ -235,6 +236,19 @@ class PitStopTest {
                                               "/pitstop/offer-assistance-allstate.json",
                                               "/pitstop/offer-assistance-aaa.json",
                                               "/pitstop/accept-offer-aaa.json");
+                }
+
+                @Test
+                void getIncidents_filterOrders() {
+                    testFixture
+                            .whenQuery(new GetIncidents())
+                            .expectResult(r -> r.size() == 1 && r.getFirst().getOffers().size() == 2)
+                            .andThen()
+                            .whenQueryByUser("other", new GetIncidents()).expectResult(r -> r.size() == 1)
+                            .mapResult(List::getFirst)
+                            .expectResult(i -> i.getOffers().size() == 1)
+                            .mapResult(i -> i.getOffers().getFirst())
+                            .expectResult(o -> o.getDetails().getOperatorId().equals(new OperatorId("aaa")));
                 }
 
                 @Test
