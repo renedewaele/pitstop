@@ -43,8 +43,6 @@ public class CorsResponseMapper implements WebResponseMapper {
                     .header("Access-Control-Allow-Credentials", "true")
                     .header("Access-Control-Allow-Headers", "Content-Type, Authorization, Accept-Encoding, X-Impersonation")
                     .header("Access-Control-Allow-Origin", originHeaders.stream().findFirst()
-                            .filter(o -> o.endsWith(".flux.host")
-                                         || o.startsWith("http://localhost:4200"))
                             .orElse("https://flux.host")).build();
         }
         return result;

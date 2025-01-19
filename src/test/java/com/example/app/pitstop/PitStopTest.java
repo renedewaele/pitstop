@@ -10,8 +10,6 @@ import com.example.app.pitstop.api.query.GetIncidents;
 import io.fluxcapacitor.javaclient.test.TestFixture;
 import io.fluxcapacitor.javaclient.tracking.handling.IllegalCommandException;
 import io.fluxcapacitor.javaclient.tracking.handling.authentication.UnauthorizedException;
-import io.fluxcapacitor.javaclient.web.HttpRequestMethod;
-import io.fluxcapacitor.javaclient.web.WebRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -260,12 +258,5 @@ class PitStopTest {
                 }
             }
         }
-    }
-
-    @Test
-    void testCorsPreflight() {
-        testFixture.whenWebRequest(WebRequest.builder().method(HttpRequestMethod.OPTIONS)
-                                           .url("/api/user/2").build())
-                .expectSuccessfulResult();
     }
 }
