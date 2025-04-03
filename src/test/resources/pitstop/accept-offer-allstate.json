@@ -1,5 +1,5 @@
 {
-  "@class": "com.example.app.pitstop.api.command.AcceptOffer",
+  "@class": "AcceptOffer",
   "incidentId": "0",
   "offerId": "1"
 }

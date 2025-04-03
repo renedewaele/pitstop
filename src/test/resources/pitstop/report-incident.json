@@ -1,5 +1,5 @@
 {
-  "@class": "com.example.app.pitstop.api.command.ReportIncident",
+  "@class": "ReportIncident",
   "incidentId": "0",
   "details": {
     "vehicle": {

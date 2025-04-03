@@ -1,5 +1,5 @@
 {
-  "@class": "com.example.app.pitstop.api.OfferDetails",
+  "@class": "OfferDetails",
   "operatorId": "allstate",
   "price": 21.50
 }

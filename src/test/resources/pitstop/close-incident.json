@@ -1,4 +1,4 @@
 {
-  "@class": "com.example.app.pitstop.api.command.CloseIncident",
+  "@class": "CloseIncident",
   "incidentId": "0"
 }

@@ -1,5 +1,5 @@
 {
-  "@class": "com.example.app.refdata.api.command.RegisterOperator",
+  "@class": "RegisterOperator",
   "operatorId": "allstate",
   "details": {
     "name": "Allstate Roadside Services"
