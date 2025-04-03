@@ -1,5 +1,5 @@
 {
-  "@class": "com.example.app.pitstop.api.IncidentDetails",
+  "@class": "IncidentDetails",
   "vehicle": {
     "licensePlateNumber": "Z-613-AB"
   },

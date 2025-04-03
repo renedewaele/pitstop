@@ -16,7 +16,7 @@
 
 	<properties>
         <java.version>21</java.version>
-        <flux-capacitor.version>0.1068.0</flux-capacitor.version>
+        <flux-capacitor.version>0.1113.0</flux-capacitor.version>
     </properties>
 
     <dependencies>

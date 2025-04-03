@@ -1,5 +1,5 @@
 {
-  "@class": "com.example.app.refdata.api.command.RegisterOperator",
+  "@class": "RegisterOperator",
   "operatorId": "aaa",
   "details": {
     "name": "American Automobile Association"
