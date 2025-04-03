@@ -5,6 +5,7 @@ import com.example.app.pitstop.api.IncidentDetails;
 import com.example.app.pitstop.api.IncidentId;
 import com.example.app.pitstop.api.OfferDetails;
 import com.example.app.pitstop.api.OfferId;
+import io.fluxcapacitor.javaclient.tracking.handling.IllegalCommandException;
 import io.fluxcapacitor.javaclient.web.HandleGet;
 import io.fluxcapacitor.javaclient.web.HandleOptions;
 import io.fluxcapacitor.javaclient.web.HandlePost;
@@ -22,7 +23,7 @@ public class PitStopApi {
 
     @HandlePost("incidents")
     IncidentId reportIncident(IncidentDetails details) {
-        throw new UnsupportedOperationException();
+        throw new IllegalCommandException("Not implemented yet");
     }
 
     @HandleGet("incidents")
@@ -32,17 +33,17 @@ public class PitStopApi {
 
     @HandlePost("incidents/{incidentId}/offers")
     OfferId offerAssistance(@PathParam IncidentId incidentId, OfferDetails details) {
-        throw new UnsupportedOperationException();
+        throw new IllegalCommandException("Not implemented yet");
     }
 
     @HandlePost("incidents/{incidentId}/offers/{offerId}/accept")
     void acceptOffer(@PathParam IncidentId incidentId, @PathParam OfferId offerId) {
-        throw new UnsupportedOperationException();
+        throw new IllegalCommandException("Not implemented yet");
     }
 
     @HandlePost("incidents/{incidentId}/close")
     void closeIncident(@PathParam IncidentId incidentId) {
-        throw new UnsupportedOperationException();
+        throw new IllegalCommandException("Not implemented yet");
     }
 
     @Path("/api/*")
